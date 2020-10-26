@@ -1,28 +1,48 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <section id="infinite-scroll">
+    <template v-if="!isLoading">
+      <Gallery v-bind="{ gifs }" />
+    </template>
+  </section>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import Gallery from "@/components/Gallery/Gallery.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "App",
+  name: "InfiniteScroll",
   components: {
-    HelloWorld
+    Gallery
+  },
+  computed: {
+    ...mapGetters({
+      gifs: "getGifCollection",
+      isLoading: "isLoading"
+    })
+  },
+  methods: {
+    ...mapActions({
+      loadGifCollection: "loadGifCollection"
+    })
+  },
+  created() {
+    this.loadGifCollection();
   }
 };
 </script>
 
 <style lang="scss">
+body {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
