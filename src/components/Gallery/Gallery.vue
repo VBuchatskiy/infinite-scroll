@@ -1,7 +1,7 @@
 <template>
   <ul class="gallery" ref="scroller" @scroll.passive="onscroll()">
     <template v-for="gif in gifs">
-      <GalleryItem :key="gif.id" v-bind="{ gif }" />
+      <gallery-item :key="gif.id" v-bind="{ gif }" />
     </template>
   </ul>
 </template>
@@ -14,43 +14,35 @@ export default {
   components: {
     GalleryItem
   },
-  data() {
-    return {
-      scroll: {
-        bottom: 0,
-        top: 0,
-        height: 0,
-        delta: 0,
-        position: 0
-      }
-    };
-  },
-  computed: {
-    limiter() {
-      return 400;
-    }
-  },
   props: {
     gifs: {
       type: Object
     }
   },
+  data() {
+    return {
+      scroll: {
+        position: 0
+      }
+    };
+  },
   methods: {
     onscroll: throttle(function() {
       if (this.$refs.scroller) {
         this.updateScroll();
+        if (this.scroll.position <= 600) {
+          this.loadMore();
+        }
       }
     }, 50),
+    loadMore: throttle(function() {
+      this.$emit("loadMore");
+    }, 2000),
     updateScroll() {
       this.scroll.position =
         this.$refs.scroller.scrollHeight -
         this.$refs.scroller.scrollTop -
         this.$refs.scroller.offsetHeight;
-    },
-    scrollToPosition(position) {
-      !Number.isNaN(position)
-        ? (this.$refs.scroller.scrollTop = position)
-        : (this.$refs.scroller.scrollTop = this.$refs.scroller.scrollHeight);
     }
   }
 };
@@ -58,22 +50,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 </style>

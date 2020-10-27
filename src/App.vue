@@ -1,8 +1,13 @@
 <template>
   <section id="infinite-scroll">
-    <template v-if="!isLoading">
-      <Gallery v-bind="{ gifs }" />
-    </template>
+    <transition>
+      <template v-if="Object.keys(gifs).length">
+        <gallery v-bind="{ gifs }" @loadMore="loadGifCollection()" />
+      </template>
+      <template v-else>
+        <pre>loading</pre>
+      </template>
+    </transition>
   </section>
 </template>
 
@@ -17,8 +22,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      gifs: "getGifCollection",
-      isLoading: "isLoading"
+      gifs: "getGifCollection"
     })
   },
   methods: {
@@ -44,5 +48,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.custom-appear-class {
 }
 </style>

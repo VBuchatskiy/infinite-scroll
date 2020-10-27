@@ -6,37 +6,35 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    gifs: {},
-    loading: false
+    gifs: {}
   },
   mutations: {
     addGifCollection(state, { collection }) {
-      state.gifs = collection;
-    },
-    changeLoadingState(state) {
-      state.loading = !state.loading;
+      state.gifs = { ...state.gifs, ...collection };
     }
   },
   actions: {
-    async loadGifCollection({ commit }) {
-      const { data } = await api.getTrendingGifCollection();
+    async loadGifCollection({ state, commit }) {
+      const { gifs } = state;
+      const { data } = Object.keys(gifs).length
+        ? await api.getTrendingGifCollection({
+            offset: Object.keys(gifs).length
+          })
+        : await api.getTrendingGifCollection();
 
-      const collection = data.reduce((_collection, _gif) => {
-        _collection[_gif.id] = _gif;
+      const collection = data.reduce((_collection, gif) => {
+        if (!gifs[gif.id]) {
+          _collection[gif.id] = gif;
+        }
         return _collection;
       }, {});
 
-      commit(`changeLoadingState`);
       commit(`addGifCollection`, { collection });
-      commit(`changeLoadingState`);
     }
   },
   getters: {
     getGifCollection(state) {
       return state.gifs;
-    },
-    isLoading(state) {
-      return state.loading;
     }
   }
 });

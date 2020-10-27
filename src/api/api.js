@@ -1,11 +1,20 @@
+import querystring from "querystring";
+
 class GiphyApi {
   constructor() {
     this.host = `https://api.giphy.com/v1/gifs/`;
-    this.key = `api_key=oZf0bLG34k2RMcuchA4D4gPp9mg8siE0`;
+    this.key = `oZf0bLG34k2RMcuchA4D4gPp9mg8siE0`;
+    this.paths = {
+      trending: `trending`
+    };
   }
 
-  async request({ path = ``, query = ``, headers, method = `GET` } = {}) {
-    const response = await fetch(`${this.host}${path}?${query}`, {
+  query({ path = ``, params = {} } = {}) {
+    return path.concat(`?`, querystring.stringify(params));
+  }
+
+  async request({ query = ``, headers, method = `GET` } = {}) {
+    const response = await fetch(`${this.host}${query}`, {
       method,
       headers
     });
@@ -17,10 +26,12 @@ class GiphyApi {
     return response.json();
   }
 
-  async getTrendingGifCollection({ limit = 20, offset = 0 } = {}) {
+  async getTrendingGifCollection({ limit = 40, offset = 0 } = {}) {
     return await this.request({
-      path: `trending`,
-      query: `${this.key}&=limit${limit}&=offset${offset}`
+      query: this.query({
+        path: this.paths.trending,
+        params: { api_key: this.key, limit, offset }
+      })
     });
   }
 }
