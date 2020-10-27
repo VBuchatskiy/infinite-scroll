@@ -1,12 +1,19 @@
 <template>
   <li class="gallery-item">
-    <vue-load-image>
+    <vue-load-image class="gallery-item-container">
       <img
         class="gallery-image"
         slot="image"
-        v-bind="{ src: gif.images.fixed_height.url }"
+        v-bind="{
+          src: gif.images.fixed_height.url,
+          alt: gif.images.fixed_height.title
+        }"
       />
-      <img class="gallery-image" slot="preloader" src="../../assets/logo.png" />
+      <img
+        class="gallery-image"
+        slot="preloader"
+        src="../../assets/preloader.gif"
+      />
     </vue-load-image>
   </li>
 </template>
@@ -27,15 +34,22 @@ export default {
 
 <style scoped lang="scss">
 .gallery-item {
+  box-sizing: border-box;
   padding: 0.1em;
-  flex-grow: 1;
+  height: 40vh;
+  width: 25%;
 }
+
+.gallery-item-container {
+  display: flex;
+  height: 100%;
+}
+
 .gallery-image {
   border-radius: 1em;
-  max-height: 100%;
-  min-width: 100%;
+  height: auto;
+  width: 100%;
   object-fit: cover;
-  vertical-align: bottom;
 }
 </style>
 

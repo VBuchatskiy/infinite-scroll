@@ -9,16 +9,19 @@
 <script>
 import { throttle } from "lodash";
 import GalleryItem from "@/components/Gallery/GalleryItem.vue";
+
 export default {
   name: "Gallery",
   components: {
     GalleryItem
   },
+
   props: {
     gifs: {
       type: Object
     }
   },
+
   data() {
     return {
       scroll: {
@@ -26,19 +29,22 @@ export default {
       }
     };
   },
+
   methods: {
     onscroll: throttle(function() {
       if (this.$refs.scroller) {
-        this.updateScroll();
+        this.updatesScrollPosition();
         if (this.scroll.position <= 600) {
           this.loadMore();
         }
       }
     }, 50),
+
     loadMore: throttle(function() {
-      this.$emit("loadMore");
+      this.$emit("load");
     }, 2000),
-    updateScroll() {
+
+    updatesScrollPosition() {
       this.scroll.position =
         this.$refs.scroller.scrollHeight -
         this.$refs.scroller.scrollTop -
@@ -59,6 +65,6 @@ export default {
   overflow-y: auto;
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 5em 0 0 0;
 }
 </style>

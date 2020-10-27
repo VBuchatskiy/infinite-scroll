@@ -1,24 +1,29 @@
 <template>
-  <section id="infinite-scroll">
-    <transition>
+  <main>
+    <header class="infinite-scroll-header">
+      <search @searching="onsearch" />
+    </header>
+    <section>
       <template v-if="Object.keys(gifs).length">
-        <gallery v-bind="{ gifs }" @loadMore="loadGifCollection()" />
+        <gallery v-bind="{ gifs }" @load="loadGifCollection()" />
       </template>
       <template v-else>
         <pre>loading</pre>
       </template>
-    </transition>
-  </section>
+    </section>
+  </main>
 </template>
 
 <script>
 import Gallery from "@/components/Gallery/Gallery.vue";
+import Search from "@/components/Search/Search.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "InfiniteScroll",
   components: {
-    Gallery
+    Gallery,
+    Search
   },
   computed: {
     ...mapGetters({
@@ -28,7 +33,10 @@ export default {
   methods: {
     ...mapActions({
       loadGifCollection: "loadGifCollection"
-    })
+    }),
+    onsearch(value) {
+      console.warn(value);
+    }
   },
   created() {
     this.loadGifCollection();
@@ -42,13 +50,16 @@ body {
   margin: 0;
   padding: 0;
 }
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-.custom-appear-class {
+.infinite-scroll-header {
+  box-sizing: border-box;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  background-color: #000;
+  position: fixed;
+  border-radius: 0.1em;
+  height: 5em;
+  width: 100%;
+  opacity: 90%;
 }
 </style>
