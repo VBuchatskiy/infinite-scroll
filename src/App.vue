@@ -35,7 +35,7 @@ export default {
       loadGifCollection: "loadGifCollection"
     }),
     onsearch(value) {
-      console.warn(value);
+      value;
     }
   },
   created() {
