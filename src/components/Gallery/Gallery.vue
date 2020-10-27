@@ -65,6 +65,8 @@ export default {
   overflow-y: auto;
   list-style-type: none;
   margin: 0;
-  padding: 5em 0 0 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 5em;
 }
 </style>

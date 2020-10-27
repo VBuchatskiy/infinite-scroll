@@ -52,14 +52,14 @@ body {
 }
 .infinite-scroll-header {
   box-sizing: border-box;
-  padding: 1em;
+  position: fixed;
   display: flex;
   align-items: center;
   background-color: #000;
-  position: fixed;
   border-radius: 0.1em;
+  top: 0;
   height: 5em;
   width: 100%;
-  opacity: 90%;
+  opacity: 80%;
 }
 </style>
