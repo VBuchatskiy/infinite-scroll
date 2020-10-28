@@ -67,6 +67,6 @@ export default {
   margin: 0;
   padding-left: 0;
   padding-right: 0;
-  padding-top: 5em;
+  padding-top: 0;
 }
 </style>

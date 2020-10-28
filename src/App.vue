@@ -1,14 +1,19 @@
 <template>
   <main>
     <header class="infinite-scroll-header">
-      <search @searching="onsearch" />
+      <search @searching="onsearch" v-bind="{ tags }" />
     </header>
     <section>
-      <template v-if="Object.keys(gifs).length">
-        <gallery v-bind="{ gifs }" @load="loadGifCollection()" />
+      <template v-if="Object.keys(searching).length">
+        <gallery v-bind="{ gifs: searching }" />
       </template>
       <template v-else>
-        <pre>loading</pre>
+        <template v-if-else="Object.keys(trending).length">
+          <gallery
+            v-bind="{ gifs: trending }"
+            @load="loadTrendingGifCollection()"
+          />
+        </template>
       </template>
     </section>
   </main>
@@ -27,19 +32,27 @@ export default {
   },
   computed: {
     ...mapGetters({
-      gifs: "getGifCollection"
+      trending: "getTrendingCollection",
+      searching: "getSearchingCollection",
+      query: "getSearchingQuery",
+      tags: "getSearchingTags"
     })
   },
   methods: {
     ...mapActions({
-      loadGifCollection: "loadGifCollection"
+      loadTrendingGifCollection: "loadTrendingGifCollection",
+      loadSearchingGifCollection: "loadSearchingGifCollection",
+      loadSearchingGifTagsCollection: "loadSearchingGifTagsCollection",
+      setSearchingQuery: "setSearchingQuery",
+      clearSearchingQuery: "clearSearchingQuery"
     }),
-    onsearch(value) {
-      value;
+    async onsearch(query) {
+      if (!query) return;
+      await this.loadSearchingGifTagsCollection({ query });
     }
   },
   created() {
-    this.loadGifCollection();
+    this.loadTrendingGifCollection();
   }
 };
 </script>
@@ -50,15 +63,19 @@ body {
   margin: 0;
   padding: 0;
 }
+
+header {
+  padding: 1em;
+}
+
 .infinite-scroll-header {
   box-sizing: border-box;
-  position: fixed;
   display: flex;
   align-items: center;
   background-color: #000;
   border-radius: 0.1em;
   top: 0;
-  height: 5em;
+  height: 5vh;
   width: 100%;
   opacity: 80%;
 }
