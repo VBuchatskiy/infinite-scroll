@@ -45,13 +45,21 @@ export default {
 
     load: throttle(function() {
       this.$emit("load", { tag: this.tag });
-    }, 2000),
+    }, 1000),
 
     updatesScrollPosition() {
       this.scroll.position =
         this.$refs.scroller.scrollHeight -
         this.$refs.scroller.scrollTop -
         this.$refs.scroller.offsetHeight;
+    }
+  },
+
+  watch: {
+    tag(curr, prev) {
+      if (curr !== prev) {
+        this.$refs.scroller.scrollTop = 0;
+      }
     }
   }
 };

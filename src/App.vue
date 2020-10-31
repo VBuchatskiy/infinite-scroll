@@ -3,7 +3,7 @@
     <header class="infinite-scroll-header">
       <search
         @searching="onsearch"
-        v-bind="{ tags }"
+        v-bind="{ tags, tag }"
         @load="loadSearchingGifCollection"
       />
     </header>
@@ -64,9 +64,11 @@ export default {
 
 <style lang="scss">
 body {
+  box-sizing: border-box;
   overflow: hidden;
   margin: 0;
   padding: 0;
+  min-width: 320px;
 }
 
 header {

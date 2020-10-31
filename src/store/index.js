@@ -49,24 +49,20 @@ export default new Vuex.Store({
 
       commit(`addTrendingGifCollection`, { collection });
     },
-
     async loadSearchingGifCollection({ state, commit }, { tag }) {
       const { searching } = state;
 
-      if (!state.tag) {
-        commit("setSearchingTag", { tag });
-      }
-
       if (state.tag !== tag) {
+        commit("setSearchingTag", { tag });
         commit("clearSearchingGifCollection");
       }
 
       const { data } = Object.keys(searching).length
         ? await api.getSearchingGifCollection({
-            q: tag ? tag : state.tag,
+            q: state.tag,
             offset: Object.keys(searching).length
           })
-        : await api.getSearchingGifCollection({ q: tag ? tag : state.tag });
+        : await api.getSearchingGifCollection({ q: state.tag });
 
       const collection = data.reduce((_collection, gif) => {
         if (!searching[gif.id]) {
@@ -78,7 +74,6 @@ export default new Vuex.Store({
       commit(`clearSearchingGifTagsCollection`);
       commit(`addSearchingGifCollection`, { collection });
     },
-
     async loadSearchingGifTagsCollection({ commit }, { tag }) {
       const { data } = await api.getSearchingGifTagsCollection({ q: tag });
 
@@ -86,11 +81,9 @@ export default new Vuex.Store({
         tags: data
       });
     },
-
     setSearchingTag({ commit }, { tag }) {
       commit(`setSearchingTag`, { tag });
     },
-
     clearSearchingTag({ commit }) {
       commit(`clearSearchingTag`);
     }

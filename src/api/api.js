@@ -28,7 +28,7 @@ class GiphyApi {
     return response.json();
   }
 
-  async getTrendingGifCollection({ limit = 40, offset = 0 } = {}) {
+  async getTrendingGifCollection({ limit = 20, offset = 0 } = {}) {
     return await this.request({
       query: this.query({
         path: this.paths.trending,
@@ -37,7 +37,7 @@ class GiphyApi {
     });
   }
 
-  async getSearchingGifCollection({ q = ``, limit = 40, offset = 0 } = {}) {
+  async getSearchingGifCollection({ q = ``, limit = 20, offset = 0 } = {}) {
     return await this.request({
       query: this.query({
         path: this.paths.search,

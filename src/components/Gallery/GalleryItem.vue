@@ -33,11 +33,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@media (min-width: 768px) {
+  .gallery-item {
+    width: 33.3%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .gallery-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 600px) {
+  .gallery-item {
+    width: 100%;
+  }
+}
+
 .gallery-item {
   box-sizing: border-box;
   padding: 0.1em;
+  min-width: 320px;
   height: 40vh;
-  width: 25%;
 }
 
 .gallery-item-container {
