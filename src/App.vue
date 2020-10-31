@@ -1,17 +1,24 @@
 <template>
   <main>
     <header class="infinite-scroll-header">
-      <search @searching="onsearch" v-bind="{ tags }" />
+      <search
+        @searching="onsearch"
+        v-bind="{ tags }"
+        @load="loadSearchingGifCollection"
+      />
     </header>
     <section>
       <template v-if="Object.keys(searching).length">
-        <gallery v-bind="{ gifs: searching }" />
+        <gallery
+          v-bind="{ tag, gifs: searching }"
+          @load="loadSearchingGifCollection"
+        />
       </template>
       <template v-else>
         <template v-if-else="Object.keys(trending).length">
           <gallery
             v-bind="{ gifs: trending }"
-            @load="loadTrendingGifCollection()"
+            @load="loadTrendingGifCollection"
           />
         </template>
       </template>
@@ -34,7 +41,7 @@ export default {
     ...mapGetters({
       trending: "getTrendingCollection",
       searching: "getSearchingCollection",
-      query: "getSearchingQuery",
+      tag: "getSearchingTag",
       tags: "getSearchingTags"
     })
   },
@@ -42,13 +49,11 @@ export default {
     ...mapActions({
       loadTrendingGifCollection: "loadTrendingGifCollection",
       loadSearchingGifCollection: "loadSearchingGifCollection",
-      loadSearchingGifTagsCollection: "loadSearchingGifTagsCollection",
-      setSearchingQuery: "setSearchingQuery",
-      clearSearchingQuery: "clearSearchingQuery"
+      loadSearchingGifTagsCollection: "loadSearchingGifTagsCollection"
     }),
-    async onsearch(query) {
-      if (!query) return;
-      await this.loadSearchingGifTagsCollection({ query });
+    async onsearch({ tag }) {
+      if (!tag) return;
+      await this.loadSearchingGifTagsCollection({ tag });
     }
   },
   created() {

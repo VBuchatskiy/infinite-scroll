@@ -1,24 +1,40 @@
 <template>
-  <label for="search" class="search">
-    <input
-      class="search-input"
-      @input="ontype($event.target.value)"
-      placeholder="Search"
-      name="search"
-      type="search"
-    />
+  <div>
+    <label for="search" class="search">
+      <input
+        class="search-input"
+        @input="ontype({ query: $event.target.value, e: $event })"
+        placeholder="Search"
+        name="search"
+        type="text"
+        v-model="query"
+      />
+    </label>
     <template v-if="Object.keys(tags).length && this.query">
       <ul class="search-options">
         <li
           v-for="tag in tags"
           :key="tag.name"
-          @click="onselect($event.target.value)"
+          @click="onselect({ tag: tag.name })"
         >
-          <span>{{ tag.name }}</span>
+          {{ tag.name }}
         </li>
       </ul>
     </template>
-  </label>
+    <template v-if="!Object.keys(tags).length && this.query">
+      <ul class="search-options">
+        <li
+          @click="
+            () => {
+              this.query = ``;
+            }
+          "
+        >
+          no results, click to reset
+        </li>
+      </ul>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -37,14 +53,24 @@ export default {
     };
   },
   methods: {
-    ontype: debounce(function(value) {
+    ontype: debounce(function({ e, query }) {
+      const { data } = e;
+      if (!data) this.query = this.query.slice(-1, 0);
+      if (!this.query) this.query = ``;
       const limite = 2;
-      this.query += value;
+      this.query = query;
       if ([...this.query].length > limite) {
-        this.$emit("searching", value.trim());
+        this.$emit("searching", {
+          tag: query.trim()
+        });
       }
-    }, 1000),
-    onselect() {}
+    }, 100),
+    onselect({ tag }) {
+      this.query = ``;
+      this.$emit("load", {
+        tag: tag.toLowerCase().replace(" ", "-")
+      });
+    }
   }
 };
 </script>

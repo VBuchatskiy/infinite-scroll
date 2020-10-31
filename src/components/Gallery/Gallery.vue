@@ -19,6 +19,9 @@ export default {
   props: {
     gifs: {
       type: Object
+    },
+    tag: {
+      type: String
     }
   },
 
@@ -35,13 +38,13 @@ export default {
       if (this.$refs.scroller) {
         this.updatesScrollPosition();
         if (this.scroll.position <= 600) {
-          this.loadMore();
+          this.load();
         }
       }
     }, 50),
 
-    loadMore: throttle(function() {
-      this.$emit("load");
+    load: throttle(function() {
+      this.$emit("load", { tag: this.tag });
     }, 2000),
 
     updatesScrollPosition() {

@@ -9,7 +9,7 @@ export default new Vuex.Store({
     trending: {},
     searching: {},
     tags: {},
-    query: ``
+    tag: ``
   },
   mutations: {
     addTrendingGifCollection(state, { collection }) {
@@ -21,11 +21,14 @@ export default new Vuex.Store({
     addSearchingGifTagsCollection(state, { tags }) {
       state.tags = { ...tags };
     },
-    setSearchingQuery(state, { query }) {
-      state.query = query;
+    setSearchingTag(state, { tag }) {
+      state.tag = tag;
     },
-    clearSearchingQuery(state) {
-      state.query = ``;
+    clearSearchingGifCollection(state) {
+      state.searching = {};
+    },
+    clearSearchingGifTagsCollection(state) {
+      state.tags = {};
     }
   },
   actions: {
@@ -47,17 +50,23 @@ export default new Vuex.Store({
       commit(`addTrendingGifCollection`, { collection });
     },
 
-    async loadSearchingGifCollection({ state, commit }) {
-      const { searching, query } = state;
+    async loadSearchingGifCollection({ state, commit }, { tag }) {
+      const { searching } = state;
 
-      if (!query) return;
+      if (!state.tag) {
+        commit("setSearchingTag", { tag });
+      }
+
+      if (state.tag !== tag) {
+        commit("clearSearchingGifCollection");
+      }
 
       const { data } = Object.keys(searching).length
         ? await api.getSearchingGifCollection({
-            q: query,
+            q: tag ? tag : state.tag,
             offset: Object.keys(searching).length
           })
-        : await api.getSearchingGifCollection();
+        : await api.getSearchingGifCollection({ q: tag ? tag : state.tag });
 
       const collection = data.reduce((_collection, gif) => {
         if (!searching[gif.id]) {
@@ -66,21 +75,24 @@ export default new Vuex.Store({
         return _collection;
       }, {});
 
+      commit(`clearSearchingGifTagsCollection`);
       commit(`addSearchingGifCollection`, { collection });
     },
 
-    async loadSearchingGifTagsCollection({ commit }, { query }) {
-      const { data } = await api.getSearchingGifTagsCollection({ q: query });
+    async loadSearchingGifTagsCollection({ commit }, { tag }) {
+      const { data } = await api.getSearchingGifTagsCollection({ q: tag });
 
-      commit(`addSearchingGifTagsCollection`, { tags: data });
+      commit(`addSearchingGifTagsCollection`, {
+        tags: data
+      });
     },
 
-    setSearchingQuery({ commit }, { query }) {
-      commit(`setSearchingQuery`, { query });
+    setSearchingTag({ commit }, { tag }) {
+      commit(`setSearchingTag`, { tag });
     },
 
-    clearSearchingQuery({ commit }) {
-      commit(`clearSearchingQuery`);
+    clearSearchingTag({ commit }) {
+      commit(`clearSearchingTag`);
     }
   },
   getters: {
@@ -90,11 +102,11 @@ export default new Vuex.Store({
     getSearchingCollection({ searching }) {
       return searching;
     },
-    getSearchingQuery({ query }) {
-      return query;
-    },
     getSearchingTags({ tags }) {
       return tags;
+    },
+    getSearchingTag({ tag }) {
+      return tag;
     }
   }
 });
