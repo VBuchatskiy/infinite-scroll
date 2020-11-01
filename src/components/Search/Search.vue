@@ -1,16 +1,15 @@
 <template>
-  <section class="search">
-    <label for="search" class="search-input">
-      <input
-        class="search-input"
-        @input="ontype({ query: $event.target.value, e: $event })"
-        placeholder="Search"
-        name="search"
-        type="text"
-        v-model="query"
-      />
-    </label>
-    <template v-if="Object.keys(tags).length && this.query">
+  <form class="search-form">
+    <label for="search" class="search-label"></label>
+    <input
+      class="search-input"
+      @input="ontype({ query: $event.target.value, e: $event })"
+      placeholder="Search"
+      name="search"
+      type="text"
+      v-model="query"
+    />
+    <template v-if="Object.keys(tags).length && query">
       <ul class="search-tag-list">
         <li
           class="search-tag-list__item"
@@ -22,13 +21,13 @@
         </li>
       </ul>
     </template>
-    <template v-if="!Object.keys(tags).length && this.query">
+    <template v-if="!Object.keys(tags).length && query && !pending">
       <ul class="search-tag-list">
         <li
           class="search-tag-list__item"
           @click="
             () => {
-              this.query = ``;
+              query = ``;
             }
           "
         >
@@ -36,7 +35,7 @@
         </li>
       </ul>
     </template>
-  </section>
+  </form>
 </template>
 
 <script>
@@ -48,8 +47,11 @@ export default {
     tags: {
       type: Object
     },
-    tage: {
+    tag: {
       type: String
+    },
+    pending: {
+      type: Boolean
     }
   },
   data() {
@@ -57,18 +59,22 @@ export default {
       query: ""
     };
   },
+  computed: {
+    limite() {
+      return 2;
+    }
+  },
   methods: {
     ontype: debounce(function({ e, query }) {
-      const { data } = e;
-      if (!data) this.query = this.query.slice(-1, 0);
-      if (!this.query) this.query = ``;
-      const limite = 2;
-      this.query = query;
-      if ([...this.query].length > limite) {
+      if ([...this.query].length > this.limite) {
         this.$emit("searching", {
           tag: query.trim()
         });
       }
+      const { data } = e;
+      if (!data) this.query = this.query.slice(-1, 0);
+      if (!this.query) this.query = ``;
+      this.query = query;
     }, 50),
     onselect({ tag }) {
       this.query = ``;
@@ -87,7 +93,16 @@ export default {
 }
 
 .search-input {
-  display: flex;
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid #e6e6e6;
+  outline: 0;
+  font-size: 1.3rem;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
   height: 2em;
   width: 15em;
 }
@@ -104,13 +119,13 @@ export default {
 
 .search-tag-list__item {
   box-sizing: border-box;
-  cursor: pointer;
   height: 3em;
   padding-left: 1em;
 }
 
 .search-tag-list__item:hover {
   background: #e6e6e6;
+  cursor: pointer;
 }
 
 .search-tag-list__text {

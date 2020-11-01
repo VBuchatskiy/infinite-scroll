@@ -38,6 +38,7 @@ class GiphyApi {
   }
 
   async getSearchingGifCollection({ q = ``, limit = 20, offset = 0 } = {}) {
+    console.warn(limit, offset);
     return await this.request({
       query: this.query({
         path: this.paths.search,
@@ -46,7 +47,7 @@ class GiphyApi {
     });
   }
 
-  async getSearchingGifTagsCollection({ q = ``, limit = 20, offset = 0 } = {}) {
+  async getSearchingGifTagsCollection({ q = ``, limit = 5, offset = 0 } = {}) {
     return await this.request({
       query: this.query({
         path: this.paths.searchTags,

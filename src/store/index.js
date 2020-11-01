@@ -9,7 +9,9 @@ export default new Vuex.Store({
     trending: {},
     searching: {},
     tags: {},
-    tag: ``
+    tag: ``,
+    pending: false,
+    loading: false
   },
   mutations: {
     addTrendingGifCollection(state, { collection }) {
@@ -23,6 +25,15 @@ export default new Vuex.Store({
     },
     setSearchingTag(state, { tag }) {
       state.tag = tag;
+    },
+    setPending(state) {
+      state.pending = !state.pending;
+    },
+    setLoading(state) {
+      state.loading = !state.loading;
+    },
+    clearTrendingGifCollection(state) {
+      state.trending = {};
     },
     clearSearchingGifCollection(state) {
       state.searching = {};
@@ -52,10 +63,14 @@ export default new Vuex.Store({
     async loadSearchingGifCollection({ state, commit }, { tag }) {
       const { searching } = state;
 
+      commit("clearTrendingGifCollection");
+
       if (state.tag !== tag) {
-        commit("setSearchingTag", { tag });
         commit("clearSearchingGifCollection");
+        commit("setSearchingTag", { tag });
       }
+
+      commit("setLoading");
 
       const { data } = Object.keys(searching).length
         ? await api.getSearchingGifCollection({
@@ -71,15 +86,20 @@ export default new Vuex.Store({
         return _collection;
       }, {});
 
+      commit("setLoading");
       commit(`clearSearchingGifTagsCollection`);
       commit(`addSearchingGifCollection`, { collection });
     },
     async loadSearchingGifTagsCollection({ commit }, { tag }) {
+      commit("setPending");
+
       const { data } = await api.getSearchingGifTagsCollection({ q: tag });
 
       commit(`addSearchingGifTagsCollection`, {
         tags: data
       });
+
+      commit("setPending");
     },
     setSearchingTag({ commit }, { tag }) {
       commit(`setSearchingTag`, { tag });
@@ -100,6 +120,12 @@ export default new Vuex.Store({
     },
     getSearchingTag({ tag }) {
       return tag;
+    },
+    isPending({ pending }) {
+      return pending;
+    },
+    isLoading({ loading }) {
+      return loading;
     }
   }
 });

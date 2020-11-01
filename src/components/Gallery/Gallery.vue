@@ -45,7 +45,7 @@ export default {
 
     load: throttle(function() {
       this.$emit("load", { tag: this.tag });
-    }, 1000),
+    }, 2000),
 
     updatesScrollPosition() {
       this.scroll.position =
@@ -70,11 +70,11 @@ export default {
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  height: 100vh;
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   list-style-type: none;
+  height: 100%;
   margin: 0;
   padding-left: 0;
   padding-right: 0;

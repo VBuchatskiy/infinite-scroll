@@ -35,7 +35,7 @@ export default {
 <style scoped lang="scss">
 @media (min-width: 768px) {
   .gallery-item {
-    width: 33.3%;
+    width: 25%;
   }
 }
 

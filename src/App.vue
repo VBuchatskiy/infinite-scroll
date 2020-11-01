@@ -3,12 +3,12 @@
     <header class="infinite-scroll-header">
       <search
         @searching="onsearch"
-        v-bind="{ tags, tag }"
+        v-bind="{ tags, tag, pending }"
         @load="loadSearchingGifCollection"
       />
     </header>
-    <section>
-      <template v-if="Object.keys(searching).length">
+    <section class="infinite-scroll-content">
+      <template v-if="tag">
         <gallery
           v-bind="{ tag, gifs: searching }"
           @load="loadSearchingGifCollection"
@@ -42,7 +42,8 @@ export default {
       trending: "getTrendingCollection",
       searching: "getSearchingCollection",
       tag: "getSearchingTag",
-      tags: "getSearchingTags"
+      tags: "getSearchingTags",
+      pending: "isPending"
     })
   },
   methods: {
@@ -69,20 +70,26 @@ body {
   margin: 0;
   padding: 0;
   min-width: 320px;
+  padding-top: 10vh;
 }
 
 header {
   padding: 1em;
 }
 
+.infinite-scroll-content {
+  height: 90vh;
+}
+
 .infinite-scroll-header {
+  height: 10vh;
+  padding: 1em;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   background-color: #000;
-  border-radius: 0.1em;
+  position: fixed;
   top: 0;
-  height: 5vh;
   width: 100%;
   opacity: 80%;
 }
