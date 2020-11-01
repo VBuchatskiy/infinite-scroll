@@ -45,6 +45,9 @@ export default new Vuex.Store({
   actions: {
     async loadTrendingGifCollection({ state, commit }) {
       const { trending } = state;
+
+      commit("setLoading");
+
       const { data } = Object.keys(trending).length
         ? await api.getTrendingGifCollection({
             offset: Object.keys(trending).length
@@ -59,6 +62,7 @@ export default new Vuex.Store({
       }, {});
 
       commit(`addTrendingGifCollection`, { collection });
+      commit("setLoading");
     },
     async loadSearchingGifCollection({ state, commit }, { tag }) {
       const { searching } = state;
@@ -86,9 +90,9 @@ export default new Vuex.Store({
         return _collection;
       }, {});
 
-      commit("setLoading");
       commit(`clearSearchingGifTagsCollection`);
       commit(`addSearchingGifCollection`, { collection });
+      commit("setLoading");
     },
     async loadSearchingGifTagsCollection({ commit }, { tag }) {
       commit("setPending");

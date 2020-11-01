@@ -104,7 +104,7 @@ export default {
   background: transparent;
   transition: border-color 0.2s;
   height: 2em;
-  width: 15em;
+  width: 14em;
 }
 
 .search-tag-list {
@@ -114,7 +114,7 @@ export default {
   padding-left: 0;
   margin: 0;
   list-style: none;
-  width: 15em;
+  width: 14em;
 }
 
 .search-tag-list__item {

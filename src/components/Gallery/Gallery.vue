@@ -10,6 +10,8 @@
 import { throttle } from "lodash";
 import GalleryItem from "@/components/Gallery/GalleryItem.vue";
 
+const limit = 1200;
+
 export default {
   name: "Gallery",
   components: {
@@ -37,7 +39,7 @@ export default {
     onscroll: throttle(function() {
       if (this.$refs.scroller) {
         this.updatesScrollPosition();
-        if (this.scroll.position <= 600) {
+        if (this.scroll.position <= limit) {
           this.load();
         }
       }

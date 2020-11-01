@@ -41,19 +41,20 @@ export default {
 
 @media (min-width: 600px) and (max-width: 768px) {
   .gallery-item {
-    width: 50%;
+    max-width: 50%;
   }
 }
 
 @media (min-width: 320px) and (max-width: 600px) {
   .gallery-item {
-    width: 100%;
+    max-width: 100%;
   }
 }
 
 .gallery-item {
   box-sizing: border-box;
   padding: 0.1em;
+  flex-grow: 1;
   min-width: 320px;
   height: 40vh;
 }
