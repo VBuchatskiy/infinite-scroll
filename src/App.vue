@@ -73,6 +73,10 @@ body {
   padding-top: 10vh;
 }
 
+main {
+  position: relative;
+}
+
 header {
   padding: 1em;
 }
